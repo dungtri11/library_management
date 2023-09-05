@@ -30,10 +30,16 @@ public class BookController {
         return ResponseEntity.ok(books);
     }
 
-    @RequestMapping(value = "librarian/book/add")
+    @RequestMapping(value = "librarian/book/add", method = RequestMethod.POST)
     @Authorities(Authority.LIBRARIAN)
     public ResponseEntity<?> addNewBook(@RequestBody Book book) {
         return ResponseEntity.ok(bookService.addNewBook(book));
+    }
+
+    @RequestMapping(value = "/book/{id}", method = RequestMethod.GET)
+    @Authorities({Authority.PUBLIC, Authority.LIBRARIAN, Authority.READER})
+    public ResponseEntity<?> bookDetails(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(bookService.findById(id));
     }
 
     @RequestMapping(value = "librarian/book/edit")
