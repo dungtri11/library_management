@@ -10,6 +10,8 @@ import com.example.demo.jwt.Jwt;
 import com.example.demo.jwt.Payload;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -30,46 +32,59 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping(value = "/reader/borrow", method = RequestMethod.POST)
+    private final long fiveDay = 5*24*60*60*1000;
+
+    @Operation(summary = "specific reader borrow specific book")
+    @RequestMapping(value = "/reader/borrow", method = RequestMethod.PUT)
     @Authorities(Authority.READER)
-    public ResponseEntity<?> borrowBook(@RequestParam("userid") Long userid,
-                                        @RequestParam("bookid") Long bookid) {
+    public ResponseEntity<?> borrowBook(
+            @Parameter(description = "id of current user want to borrow book") @RequestParam("userid") Long userid,
+            @Parameter(description = "id of book want to borrow") @RequestParam("bookid") Long bookid) {
         BorrowingDetailDto borrowingDetailDto =
-                userService.borrowBook(userid, bookid, System.currentTimeMillis() + (5*24*60*60*1000));
+                userService.borrowBook(userid, bookid, System.currentTimeMillis() + fiveDay);
         return ResponseEntity.ok(borrowingDetailDto);
     }
 
-    @RequestMapping(value = "/reader/return", method = RequestMethod.POST)
+    @Operation(summary = "specific reader return specific borrowed book")
+    @RequestMapping(value = "/reader/return", method = RequestMethod.PUT)
     @Authorities(Authority.READER)
-    public ResponseEntity<?> returnBook(@RequestParam("userid") Long userid,
-                                        @RequestParam("bookid") Long bookid) {
+    public ResponseEntity<?> returnBook(
+            @Parameter(description = "id of current user want to return book") @RequestParam("userid") Long userid,
+            @Parameter(description = "id of book want to return") @RequestParam("bookid") Long bookid) {
         CheckoutDetailDto checkoutDetailDto = userService.returnBook(userid, bookid);
         return ResponseEntity.ok(checkoutDetailDto);
     }
 
-    @RequestMapping(value = "/librarian/switchStatus", method = RequestMethod.POST)
+    @Operation(summary = "librarian switch user status")
+    @RequestMapping(value = "/librarian/switchStatus", method = RequestMethod.PUT)
     @Authorities(Authority.LIBRARIAN)
-    public ResponseEntity<?> switchUserStatus(@RequestBody User user) {
-        userService.switchUserStatus(user);
+    public ResponseEntity<?> switchUserStatus(
+            @Parameter(description = "id of updating user") @RequestParam Long userid) {
+        userService.switchUserStatus(userid);
         return ResponseEntity.ok("Successfully Switched Status");
     }
 
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    @Operation(summary = "register as new reader")
+    @RequestMapping(value = "/doRegister", method = RequestMethod.POST)
     @Authorities(Authority.PUBLIC)
-    public ResponseEntity<?> userRegister(@RequestBody User user) {
+    public ResponseEntity<?> doRegister(@RequestBody User user) {
         User newUser = userService.userRegister(user);
         return ResponseEntity.ok(newUser);
     }
 
+    @Operation(summary = "access into login page")
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     @Authorities(Authority.PUBLIC)
     public ResponseEntity<?> getLogin() {
         return ResponseEntity.ok("This is login page");
     }
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    @Operation(summary = "authenticate login information")
+    @RequestMapping(value = "/doLogin", method = RequestMethod.POST)
     @Authorities(Authority.PUBLIC)
-    public ResponseEntity<?> doLogin(@RequestParam("username") String username, @RequestParam("password") String password) {
+    public ResponseEntity<?> doLogin(
+            @Parameter(description = "login username") @RequestParam("username") String username,
+            @Parameter(description = "login password") @RequestParam("password") String password) {
         HttpHeaders headers = new HttpHeaders();
         User user = userService.userLogin(username, password);
         if (user != null) {
@@ -80,6 +95,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Can't find user");
     }
 
+    @Operation(summary = "logout from current credential")
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
     @Authorities({Authority.READER, Authority.LIBRARIAN})
     public ResponseEntity<?> userLogout(HttpServletRequest request, HttpServletResponse response) {

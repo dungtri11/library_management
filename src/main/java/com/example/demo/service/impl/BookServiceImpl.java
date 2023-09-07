@@ -2,7 +2,8 @@ package com.example.demo.service.impl;
 
 import com.example.demo.common.BookStatus;
 import com.example.demo.entity.Book;
-import com.example.demo.exception.MyCustomException;
+import com.example.demo.exception.ObjectNotFoundException;
+import com.example.demo.exception.InvalidObjectForActionException;
 import com.example.demo.model.BookCriteria;
 import com.example.demo.repository.BookRepository;
 import com.example.demo.service.BookService;
@@ -26,13 +27,15 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book findByIdAndStatus(Long id, BookStatus status) {
-        return bookRepository.findById(id).orElseThrow(() -> new MyCustomException("Unavailable book"));
+        return bookRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException("Couldn't find suitable books"));
     }
 
     @Override
-    public void deleteBook(Book book) {
+    public void deleteBook(Long bookid) {
+        Book book = bookRepository.findById(bookid)
+                .orElseThrow(() -> new ObjectNotFoundException("Couldn't find suitable books"));
         if (book.getStatus() != BookStatus.NOT_AVAILABLE) {
-            throw new MyCustomException("Book need to be unavailable");
+            throw new InvalidObjectForActionException("Book need to be unavailable for deletion");
         }
         bookRepository.delete(book);
     }
@@ -45,14 +48,14 @@ public class BookServiceImpl implements BookService {
     @Override
     public Book editBook(Book book) {
         if (!bookRepository.existsById(book.getId())) {
-            throw new MyCustomException("Unavailable Book");
+            throw new ObjectNotFoundException("Couldn't find suitable books");
         }
         return save(book);
     }
 
     @Override
     public Book findById(Long id) {
-        return bookRepository.findById(id).orElseThrow(() -> new MyCustomException("Book not found"));
+        return bookRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException("Couldn't find suitable books"));
     }
 
 

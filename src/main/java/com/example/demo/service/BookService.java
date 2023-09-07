@@ -10,7 +10,7 @@ public interface BookService {
     public List<Book> findBookByCriteria(BookCriteria bookCriteria);
     public Book save(Book book);
     public Book findByIdAndStatus(Long id, BookStatus status);
-    public void deleteBook(Book book);
+    public void deleteBook(Long bookid);
     public Book addNewBook(Book book);
     public Book editBook(Book book);
 

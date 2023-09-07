@@ -10,12 +10,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 @ControllerAdvice
-public class MyCustomExceptionAdvice {
+public class ObjectNotFoundExceptionAdvice {
 
     @ResponseBody
-    @ExceptionHandler(MyCustomException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, String> exceptionHandle(MyCustomException exception) {
+    @ExceptionHandler(ObjectNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, String> exceptionHandle(InvalidObjectForActionException exception) {
         Map<String, String> error = new HashMap<>();
         error.put("Exception Detail:", exception.getMessage());
         return error;

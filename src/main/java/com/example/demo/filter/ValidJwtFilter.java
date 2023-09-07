@@ -1,7 +1,6 @@
 package com.example.demo.filter;
 
 import com.example.demo.entity.User;
-import com.example.demo.exception.MyCustomException;
 import com.example.demo.jwt.Header;
 import com.example.demo.jwt.Jwt;
 import com.example.demo.jwt.Payload;
@@ -9,7 +8,6 @@ import com.example.demo.repository.UserRepository;
 import com.example.demo.utils.ObjectHandler;
 import jakarta.servlet.*;
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
