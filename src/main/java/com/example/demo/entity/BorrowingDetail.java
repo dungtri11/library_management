@@ -2,10 +2,7 @@ package com.example.demo.entity;
 
 import com.example.demo.common.BorrowingStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name = "borrowing_detail")

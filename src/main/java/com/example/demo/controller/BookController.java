@@ -38,7 +38,7 @@ public class BookController {
     }
 
     @Operation(summary = "add new book")
-    @RequestMapping(value = "librarian/book/add", method = RequestMethod.POST)
+    @RequestMapping(value = "/librarian/book/add", method = RequestMethod.POST)
     @Authorities(Authority.LIBRARIAN)
     public ResponseEntity<?> addNewBook(@RequestBody Book book) {
         return ResponseEntity.ok(bookService.addNewBook(book));
@@ -53,14 +53,14 @@ public class BookController {
     }
 
     @Operation(summary = "edit book information")
-    @RequestMapping(value = "librarian/book/edit", method = RequestMethod.PUT)
+    @RequestMapping(value = "/librarian/book/edit", method = RequestMethod.PUT)
     @Authorities(Authority.LIBRARIAN)
     public ResponseEntity<?> editBook(@RequestBody Book book) {
         return ResponseEntity.ok(bookService.editBook(book));
     }
 
     @Operation(summary = "delete book")
-    @RequestMapping(value = "librarian/book/delete", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/librarian/book/delete", method = RequestMethod.DELETE)
     @Authorities(Authority.LIBRARIAN)
     public ResponseEntity<?> deleteBook(
             @Parameter(description = "id of deleting user") @RequestParam Long bookid) {

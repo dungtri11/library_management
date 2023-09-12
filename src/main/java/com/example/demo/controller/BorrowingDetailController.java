@@ -6,7 +6,6 @@ import com.example.demo.dto.ReaderActionDetailDto;
 import com.example.demo.service.BorrowingDetailService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -15,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-public class BorrowingController {
+public class BorrowingDetailController {
     @Autowired
     private BorrowingDetailService borrowingDetailService;
 

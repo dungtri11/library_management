@@ -13,7 +13,6 @@ public interface BookService {
     public void deleteBook(Long bookid);
     public Book addNewBook(Book book);
     public Book editBook(Book book);
-
     public Book findById(Long id);
 
 }
