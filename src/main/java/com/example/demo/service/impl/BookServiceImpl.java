@@ -34,8 +34,8 @@ public class BookServiceImpl implements BookService {
     public void deleteBook(Long bookid) {
         Book book = bookRepository.findById(bookid)
                 .orElseThrow(() -> new ObjectNotFoundException("Couldn't find suitable books"));
-        if (book.getStatus() != BookStatus.NOT_AVAILABLE) {
-            throw new InvalidObjectForActionException("Book need to be unavailable for deletion");
+        if (book.getStatus() == BookStatus.NOT_AVAILABLE) {
+            throw new InvalidObjectForActionException("Book need to be available for deletion");
         }
         bookRepository.delete(book);
     }

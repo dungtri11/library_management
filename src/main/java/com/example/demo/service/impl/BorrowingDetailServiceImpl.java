@@ -7,6 +7,8 @@ import com.example.demo.dto.ReaderActionDetailDto;
 import com.example.demo.entity.Book;
 import com.example.demo.entity.BorrowingDetail;
 import com.example.demo.entity.User;
+import com.example.demo.exception.InvalidObjectForActionException;
+import com.example.demo.exception.ObjectNotFoundException;
 import com.example.demo.repository.BorrowingDetailRepository;
 import com.example.demo.service.BookService;
 import com.example.demo.service.BorrowingDetailService;
@@ -25,6 +27,10 @@ public class BorrowingDetailServiceImpl implements BorrowingDetailService {
 
     @Override
     public BorrowingDetail createNewBorrowDetail(User user, Book book, long expectedReturn) {
+        if (borrowingDetailRepository.existsByUserIdAndBookIdAndStatus(user.getId(), book.getId(), BorrowingStatus.IN_QUEUE) ||
+        borrowingDetailRepository.existsByUserIdAndBookIdAndStatus(user.getId(), book.getId(), BorrowingStatus.BORROWING)) {
+            throw new InvalidObjectForActionException("User has already borrowed this book");
+        }
         BorrowingStatus status = (book.getStatus() == BookStatus.NOT_AVAILABLE
                 ? BorrowingStatus.IN_QUEUE : BorrowingStatus.BORROWING);
 
@@ -41,6 +47,9 @@ public class BorrowingDetailServiceImpl implements BorrowingDetailService {
     @Override
     public BorrowingDetail checkOutBorrowDetail(Long userid, Long bookid) {
         BorrowingDetail borrowingDetail = findBorrowingByUserIdAndBookId(userid, bookid);
+        if (borrowingDetail == null) {
+            throw new InvalidObjectForActionException("Book has been already returned");
+        }
 
         long current = System.currentTimeMillis();
         long penaltyDuration = current - borrowingDetail.getExpectedReturnTime();
@@ -57,7 +66,7 @@ public class BorrowingDetailServiceImpl implements BorrowingDetailService {
             book.setStatus(BookStatus.NOT_AVAILABLE);
             bookService.save(book);
             borrowingDetail.setStatus(BorrowingStatus.BORROWING);
-            borrowingDetail.setExpectedReturnTime(current + (7*24*60*60*1000));
+            borrowingDetail.setExpectedReturnTime(current + (5*24*60*60*1000));
             save(borrowingDetail);
         }
         return ret;

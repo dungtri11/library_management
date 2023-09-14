@@ -15,7 +15,7 @@ public class ObjectNotFoundExceptionAdvice {
     @ResponseBody
     @ExceptionHandler(ObjectNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Map<String, String> exceptionHandle(InvalidObjectForActionException exception) {
+    public Map<String, String> exceptionHandle(ObjectNotFoundException exception) {
         Map<String, String> error = new HashMap<>();
         error.put("Exception Detail:", exception.getMessage());
         return error;

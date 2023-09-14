@@ -11,4 +11,5 @@ import java.util.Optional;
 public interface BorrowingDetailRepository extends JpaRepository<BorrowingDetail, Long> {
     public Optional<BorrowingDetail> findByUserIdAndBookIdAndStatus(Long userid, Long bookid, BorrowingStatus status);
     public Optional<BorrowingDetail> findFirstByBookIdAndStatusOrderByBorrowTimeDesc(Long bookid, BorrowingStatus status);
+    public boolean existsByUserIdAndBookIdAndStatus(Long userid, Long bookid, BorrowingStatus status);
 }

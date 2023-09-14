@@ -40,6 +40,7 @@ public class RequestAccessFilter implements Filter {
                     .filter(cookie -> cookie.getName().equals("credential")).collect(Collectors.toList());
             token = (cookieList.size() > 0 ? cookieList.get(0).getValue() : null);
         }
+
         String authority = Authority.PUBLIC.toString();
         if (token != null) {
             Jwt jwt = new Jwt();
