@@ -38,14 +38,14 @@ public class BookController {
     }
 
     @Operation(summary = "add new book")
-    @RequestMapping(value = "/librarian/book/add", method = RequestMethod.POST)
+    @RequestMapping(value = "/books/add", method = RequestMethod.POST)
     @Authorities(Authority.LIBRARIAN)
     public ResponseEntity<?> addNewBook(@RequestBody Book book) {
         return ResponseEntity.ok(bookService.addNewBook(book));
     }
 
     @Operation(summary = "get book by id")
-    @RequestMapping(value = "/book/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/books/detail/{id}", method = RequestMethod.GET)
     @Authorities({Authority.PUBLIC, Authority.LIBRARIAN, Authority.READER})
     public ResponseEntity<?> bookDetails(
             @Parameter(description = "book id for searching") @PathVariable("id") Long id) {
@@ -53,17 +53,17 @@ public class BookController {
     }
 
     @Operation(summary = "edit book information")
-    @RequestMapping(value = "/librarian/book/edit", method = RequestMethod.PUT)
+    @RequestMapping(value = "/books/edit", method = RequestMethod.PUT)
     @Authorities(Authority.LIBRARIAN)
     public ResponseEntity<?> editBook(@RequestBody Book book) {
         return ResponseEntity.ok(bookService.editBook(book));
     }
 
     @Operation(summary = "delete book")
-    @RequestMapping(value = "/librarian/book/delete", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/books/delete/{id}", method = RequestMethod.DELETE)
     @Authorities(Authority.LIBRARIAN)
     public ResponseEntity<?> deleteBook(
-            @Parameter(description = "id of deleting user") @RequestParam Long bookid) {
+            @Parameter(description = "id of deleting user") @PathVariable("id") Long bookid) {
         bookService.deleteBook(bookid);
         return ResponseEntity.ok("Successfully Deleted");
     }

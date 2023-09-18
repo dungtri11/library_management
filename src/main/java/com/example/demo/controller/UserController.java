@@ -33,31 +33,8 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    private final long fiveDay = 5*24*60*60*1000;
-
-    @Operation(summary = "specific reader borrow specific book")
-    @RequestMapping(value = "/reader/borrow", method = RequestMethod.PUT)
-    @Authorities(Authority.READER)
-    public ResponseEntity<?> borrowBook(
-            @Parameter(description = "id of current user want to borrow book") @RequestParam("userid") Long userid,
-            @Parameter(description = "id of book want to borrow") @RequestParam("bookid") Long bookid) {
-        BorrowingDetailDto borrowingDetailDto =
-                userService.borrowBook(userid, bookid, System.currentTimeMillis() + fiveDay);
-        return ResponseEntity.ok(borrowingDetailDto);
-    }
-
-    @Operation(summary = "specific reader return specific borrowed book")
-    @RequestMapping(value = "/reader/return", method = RequestMethod.PUT)
-    @Authorities(Authority.READER)
-    public ResponseEntity<?> returnBook(
-            @Parameter(description = "id of current user want to return book") @RequestParam("userid") Long userid,
-            @Parameter(description = "id of book want to return") @RequestParam("bookid") Long bookid) {
-        CheckoutDetailDto checkoutDetailDto = userService.returnBook(userid, bookid);
-        return ResponseEntity.ok(checkoutDetailDto);
-    }
-
     @Operation(summary = "librarian switch user status")
-    @RequestMapping(value = "/librarian/switchStatus", method = RequestMethod.PUT)
+    @RequestMapping(value = "/user/switch-status", method = RequestMethod.PUT)
     @Authorities(Authority.LIBRARIAN)
     public ResponseEntity<?> switchUserStatus(
             @Parameter(description = "id of updating user") @RequestParam Long userid) {
@@ -66,7 +43,7 @@ public class UserController {
     }
 
     @Operation(summary = "register as new reader")
-    @RequestMapping(value = "/doRegister", method = RequestMethod.POST)
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
     @Authorities(Authority.PUBLIC)
     public ResponseEntity<?> doRegister(@RequestBody User user) {
         User newUser = userService.userRegister(user);
@@ -81,7 +58,7 @@ public class UserController {
     }
 
     @Operation(summary = "authenticate login information")
-    @RequestMapping(value = "/doLogin", method = RequestMethod.POST)
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
     @Authorities(Authority.PUBLIC)
     public ResponseEntity<?> doLogin(@RequestBody AuthenDto auth) {
         HttpHeaders headers = new HttpHeaders();
