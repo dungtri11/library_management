@@ -34,7 +34,7 @@ public class UserController {
     private UserService userService;
 
     @Operation(summary = "librarian switch user status")
-    @RequestMapping(value = "/user/switch-status", method = RequestMethod.PUT)
+    @RequestMapping(value = "/user/switch-authority", method = RequestMethod.PUT)
     @Authorities(Authority.LIBRARIAN)
     public ResponseEntity<?> switchUserStatus(
             @Parameter(description = "id of updating user") @RequestParam Long userid) {
