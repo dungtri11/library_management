@@ -42,6 +42,10 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book addNewBook(Book book) {
+        book.setStatus(BookStatus.AVAILABLE);
+        if (bookRepository.existsByIsbn(book.getIsbn())) {
+            throw new InvalidObjectForActionException("ISBN must be unique");
+        }
         return save(book);
     }
 

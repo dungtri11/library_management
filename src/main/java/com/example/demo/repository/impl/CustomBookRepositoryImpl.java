@@ -1,6 +1,7 @@
 package com.example.demo.repository.impl;
 
 import com.example.demo.common.BookStatus;
+import com.example.demo.exception.InvalidObjectForActionException;
 import com.example.demo.model.BookCriteria;
 import com.example.demo.entity.Book;
 import com.example.demo.repository.CustomBookRepository;
@@ -44,8 +45,10 @@ public class CustomBookRepositoryImpl implements CustomBookRepository {
                     criteriaQuery.select(root);
                     if (bookCriteria.getOrder().equals("asc")) {
                         criteriaQuery.orderBy(criteriaBuilder.asc(root.get("title")));
-                    } else {
+                    } else if (bookCriteria.getOrder().equals("desc")) {
                         criteriaQuery.orderBy(criteriaBuilder.desc(root.get("title")));
+                    } else {
+                        throw new InvalidObjectForActionException("Invalid criteria field");
                     }
                 }
             }
@@ -55,8 +58,10 @@ public class CustomBookRepositoryImpl implements CustomBookRepository {
                     criteriaQuery.select(root);
                     if (bookCriteria.getOrder().equals("asc")) {
                         criteriaQuery.orderBy(criteriaBuilder.asc(root.get("author")));
-                    } else {
+                    } else if (bookCriteria.getOrder().equals("desc")) {
                         criteriaQuery.orderBy(criteriaBuilder.desc(root.get("author")));
+                    } else {
+                        throw new InvalidObjectForActionException("Invalid criteria field");
                     }
                 }
             }

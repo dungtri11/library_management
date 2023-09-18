@@ -42,7 +42,6 @@ public class ValidJwtFilter implements Filter {
                     .filter(cookie -> cookie.getName().equals("credential")).collect(Collectors.toList());
             token = (cookieList.size() > 0 ? cookieList.get(0).getValue() : null);
         }
-        logger.info(token);
         if (token == null) {
             filterChain.doFilter(request, response);
         } else {
