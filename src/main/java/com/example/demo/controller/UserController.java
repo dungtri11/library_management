@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.annotation.Authorities;
 import com.example.demo.common.Authority;
+import com.example.demo.dto.AuthenDto;
 import com.example.demo.dto.BorrowingDetailDto;
 import com.example.demo.dto.CheckoutDetailDto;
 import com.example.demo.entity.User;
@@ -82,10 +83,10 @@ public class UserController {
     @Operation(summary = "authenticate login information")
     @RequestMapping(value = "/doLogin", method = RequestMethod.POST)
     @Authorities(Authority.PUBLIC)
-    public ResponseEntity<?> doLogin(
-            @Parameter(description = "login username") @RequestParam("username") String username,
-            @Parameter(description = "login password") @RequestParam("password") String password) {
+    public ResponseEntity<?> doLogin(@RequestBody AuthenDto auth) {
         HttpHeaders headers = new HttpHeaders();
+        String username = auth.getUsername();
+        String password = auth.getPassword();
         User user = userService.userLogin(username, password);
         if (user != null) {
             String credential = new Jwt(new Header(), new Payload(username, user.getAuthority()), "MySecret").getSpecification();

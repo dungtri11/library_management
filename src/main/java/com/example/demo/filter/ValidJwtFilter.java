@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
-@Order(1)
+@Order(2)
 public class ValidJwtFilter implements Filter {
 
     private Logger logger = LoggerFactory.getLogger(ValidJwtFilter.class);
