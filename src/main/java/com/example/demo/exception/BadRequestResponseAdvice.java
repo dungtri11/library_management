@@ -10,14 +10,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 @ControllerAdvice
-public class InvalidObjectForActionExceptionAdvice {
+public class BadRequestResponseAdvice {
 
     @ResponseBody
-    @ExceptionHandler(InvalidObjectForActionException.class)
+    @ExceptionHandler(BadRequestResponseException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, String> exceptionHandle(InvalidObjectForActionException exception) {
+    public Map<String, String> exceptionHandle(BadRequestResponseException exception) {
         Map<String, String> error = new HashMap<>();
-        error.put("Exception Detail:", exception.getMessage());
+        String[] params = exception.getMessage().split(":");
+        String code = params[1].trim();
+        String message = params[0].trim();
+        error.put("Code", code);
+        error.put("Message", message);
         return error;
     }
 }

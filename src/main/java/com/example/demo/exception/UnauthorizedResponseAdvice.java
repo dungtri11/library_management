@@ -10,14 +10,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 @ControllerAdvice
-public class ObjectNotFoundExceptionAdvice {
+public class UnauthorizedResponseAdvice {
 
     @ResponseBody
-    @ExceptionHandler(ObjectNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Map<String, String> exceptionHandle(ObjectNotFoundException exception) {
+    @ExceptionHandler(UnauthorizedResponseException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public Map<String, String> exceptionHandle(UnauthorizedResponseException exception) {
         Map<String, String> error = new HashMap<>();
-        error.put("Exception Detail:", exception.getMessage());
+        String[] params = exception.getMessage().split(":");
+        String code = params[1].trim();
+        String message = params[0].trim();
+        error.put("Code", code);
+        error.put("Message", message);
         return error;
     }
 }

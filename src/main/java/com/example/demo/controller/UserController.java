@@ -65,12 +65,11 @@ public class UserController {
         String username = auth.getUsername();
         String password = auth.getPassword();
         User user = userService.userLogin(username, password);
-        if (user != null) {
-            String credential = new Jwt(new Header(), new Payload(username, user.getAuthority()), "MySecret").getSpecification();
-            headers.add("Set-Cookie", "credential=" + credential + "; Max-Age=604800; Path=/; Secure; HttpOnly; SameSite=strict");
-            return ResponseEntity.status(HttpStatus.OK).headers(headers).body("Successfully login");
-        }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Can't find user");
+
+        String credential = new Jwt(new Header(), new Payload(username, user.getAuthority()), "MySecret").getSpecification();
+        headers.add("Set-Cookie", "credential=" + credential + "; Max-Age=604800; Path=/; Secure; HttpOnly; SameSite=strict");
+        return ResponseEntity.status(HttpStatus.OK).headers(headers).body("Successfully login");
+
     }
 
     @Operation(summary = "logout from current credential")

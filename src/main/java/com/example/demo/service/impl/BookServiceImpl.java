@@ -2,8 +2,8 @@ package com.example.demo.service.impl;
 
 import com.example.demo.common.BookStatus;
 import com.example.demo.entity.Book;
-import com.example.demo.exception.ObjectNotFoundException;
-import com.example.demo.exception.InvalidObjectForActionException;
+import com.example.demo.exception.BadRequestResponseException;
+
 import com.example.demo.model.BookCriteria;
 import com.example.demo.repository.BookRepository;
 import com.example.demo.service.BookService;
@@ -27,15 +27,16 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book findByIdAndStatus(Long id, BookStatus status) {
-        return bookRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException("Couldn't find suitable books"));
+        return bookRepository.findById(id).orElseThrow(() ->
+                new BadRequestResponseException("Couldn't find suitable books: 101"));
     }
 
     @Override
     public void deleteBook(Long bookid) {
         Book book = bookRepository.findById(bookid)
-                .orElseThrow(() -> new ObjectNotFoundException("Couldn't find suitable books"));
+                .orElseThrow(() -> new BadRequestResponseException("Couldn't find suitable books: 101"));
         if (book.getStatus() == BookStatus.NOT_AVAILABLE) {
-            throw new InvalidObjectForActionException("Book need to be available for deletion");
+            throw new BadRequestResponseException("Book need to be available for deletion: 103");
         }
         bookRepository.delete(book);
     }
@@ -44,7 +45,7 @@ public class BookServiceImpl implements BookService {
     public Book addNewBook(Book book) {
         book.setStatus(BookStatus.AVAILABLE);
         if (bookRepository.existsByIsbn(book.getIsbn())) {
-            throw new InvalidObjectForActionException("ISBN must be unique");
+            throw new BadRequestResponseException("ISBN must be unique: 102");
         }
         return save(book);
     }
@@ -52,14 +53,15 @@ public class BookServiceImpl implements BookService {
     @Override
     public Book editBook(Book book) {
         if (!bookRepository.existsById(book.getId())) {
-            throw new ObjectNotFoundException("Couldn't find suitable books");
+            throw new BadRequestResponseException("Couldn't find suitable books: 101");
         }
         return save(book);
     }
 
     @Override
     public Book findById(Long id) {
-        return bookRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException("Couldn't find suitable books"));
+        return bookRepository.findById(id).orElseThrow(() ->
+                new BadRequestResponseException("Couldn't find suitable books: 101"));
     }
 
 

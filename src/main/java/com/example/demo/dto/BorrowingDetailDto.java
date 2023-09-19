@@ -1,8 +1,6 @@
 package com.example.demo.dto;
 
-import com.example.demo.entity.Book;
 import com.example.demo.entity.BorrowingDetail;
-import com.example.demo.entity.User;
 import lombok.*;
 
 import java.util.Date;

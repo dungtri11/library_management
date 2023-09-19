@@ -56,9 +56,9 @@ public class ValidJwtFilter implements Filter {
                 if (jwt.getSpecification().equals(token)) {
                     filterChain.doFilter(request, response);
                 } else {
-                    response.setStatus(HttpServletResponse.SC_CONFLICT);
+                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                     response.getWriter().write("Token is not match");
-                    logger.info("Response Status: {}", HttpStatus.CONFLICT);
+                    logger.info("Response Status: {}", HttpStatus.FORBIDDEN);
                 }
             } else {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);

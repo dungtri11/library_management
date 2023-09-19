@@ -1,7 +1,7 @@
 package com.example.demo.repository.impl;
 
 import com.example.demo.common.BookStatus;
-import com.example.demo.exception.InvalidObjectForActionException;
+import com.example.demo.exception.BadRequestResponseException;
 import com.example.demo.model.BookCriteria;
 import com.example.demo.entity.Book;
 import com.example.demo.repository.CustomBookRepository;
@@ -48,7 +48,7 @@ public class CustomBookRepositoryImpl implements CustomBookRepository {
                     } else if (bookCriteria.getOrder().equals("desc")) {
                         criteriaQuery.orderBy(criteriaBuilder.desc(root.get("title")));
                     } else {
-                        throw new InvalidObjectForActionException("Invalid criteria field");
+                        throw new BadRequestResponseException("Invalid criteria field: 501");
                     }
                 }
             }
@@ -61,7 +61,7 @@ public class CustomBookRepositoryImpl implements CustomBookRepository {
                     } else if (bookCriteria.getOrder().equals("desc")) {
                         criteriaQuery.orderBy(criteriaBuilder.desc(root.get("author")));
                     } else {
-                        throw new InvalidObjectForActionException("Invalid criteria field");
+                        throw new BadRequestResponseException("Invalid criteria field: 501");
                     }
                 }
             }
