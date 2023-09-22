@@ -5,6 +5,7 @@ import com.example.demo.common.Authority;
 import com.example.demo.dto.AuthenDto;
 import com.example.demo.dto.BorrowingDetailDto;
 import com.example.demo.dto.CheckoutDetailDto;
+import com.example.demo.dto.UserInfoDto;
 import com.example.demo.entity.User;
 import com.example.demo.jwt.Header;
 import com.example.demo.jwt.Jwt;
@@ -42,53 +43,4 @@ public class UserController {
         return ResponseEntity.ok("Successfully Switched Status");
     }
 
-    @Operation(summary = "register as new reader")
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
-    @Authorities(Authority.PUBLIC)
-    public ResponseEntity<?> doRegister(@RequestBody User user) {
-        User newUser = userService.userRegister(user);
-        return ResponseEntity.ok(newUser);
-    }
-
-    @Operation(summary = "access into login page")
-    @RequestMapping(value = "/login", method = RequestMethod.GET)
-    @Authorities(Authority.PUBLIC)
-    public ResponseEntity<?> getLogin() {
-        return ResponseEntity.ok("This is login page");
-    }
-
-    @Operation(summary = "authenticate login information")
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
-    @Authorities(Authority.PUBLIC)
-    public ResponseEntity<?> doLogin(@RequestBody AuthenDto auth) {
-        HttpHeaders headers = new HttpHeaders();
-        String username = auth.getUsername();
-        String password = auth.getPassword();
-        User user = userService.userLogin(username, password);
-
-        String credential = new Jwt(new Header(), new Payload(username, user.getAuthority()), "MySecret").getSpecification();
-        headers.add("Set-Cookie", "credential=" + credential + "; Max-Age=604800; Path=/; Secure; HttpOnly; SameSite=strict");
-        return ResponseEntity.status(HttpStatus.OK).headers(headers).body("Successfully login");
-
-    }
-
-    @Operation(summary = "logout from current credential")
-    @RequestMapping(value = "/logout", method = RequestMethod.GET)
-    @Authorities({Authority.READER, Authority.LIBRARIAN})
-    public ResponseEntity<?> userLogout(HttpServletRequest request, HttpServletResponse response) {
-        Cookie[] cookies = request.getCookies();
-        Cookie c = null;
-        if (cookies != null) {
-            List<Cookie> cookieList = Arrays.stream(cookies)
-                    .filter(cookie -> cookie.getName().equals("credential")).collect(Collectors.toList());
-            c = (cookieList.size() > 0 ? cookieList.get(0) : null);
-        }
-        if (c != null) {
-            c.setMaxAge(0);
-            response.addCookie(c);
-            return ResponseEntity.ok("Successfully logout");
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Credential not found");
-        }
-    }
 }

@@ -39,7 +39,8 @@ public class CustomBookRepositoryImpl implements CustomBookRepository {
             predicates.add(criteriaBuilder.like(root.get("title"), "%"+bookCriteria.getKey()+"%"));
             predicates.add(criteriaBuilder.like(root.get("author"), "%"+bookCriteria.getKey()+"%"));
         } else {
-            if (bookCriteria.getTitle() != null) {
+            if (bookCriteria.getTitle() != null ||
+                    (bookCriteria.getTitle() == null && bookCriteria.getAuthor() == null)) {
                 predicates.add(criteriaBuilder.like(root.get("title"), "%"+bookCriteria.getTitle()+"%"));
                 if (bookCriteria.getOrder() != null) {
                     criteriaQuery.select(root);

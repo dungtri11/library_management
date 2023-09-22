@@ -19,9 +19,11 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
+
 public class BorrowingDetailController {
     @Autowired
     private BorrowingDetailService borrowingDetailService;
+    @Autowired
     private UserService userService;
     private final long fiveDay = 5*24*60*60*1000;
 

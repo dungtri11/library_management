@@ -28,7 +28,9 @@ public class AnnotationHandler {
                 if (method.isAnnotationPresent(RequestMapping.class)) {
                     RequestMapping requestMapping = method.getAnnotation(RequestMapping.class);
                     for (String api : requestMapping.value()) {
-                        if (uri.startsWith(ApiHandler.getApiPrefix(api))) {
+                        String pre = ApiHandler.getApiPrefix(api);
+                        System.out.println(api);
+                        if (uri.startsWith(pre)) {
                             return method;
                         }
                     }

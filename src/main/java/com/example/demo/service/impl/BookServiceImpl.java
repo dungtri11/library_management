@@ -55,6 +55,9 @@ public class BookServiceImpl implements BookService {
         if (!bookRepository.existsById(book.getId())) {
             throw new BadRequestResponseException("Couldn't find suitable books: 101");
         }
+        if (bookRepository.existsByIsbn(book.getIsbn())) {
+            throw new BadRequestResponseException("ISBN must be unique: 102");
+        }
         return save(book);
     }
 
