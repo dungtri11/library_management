@@ -3,6 +3,7 @@ package com.example.demo.config;
 import com.example.demo.common.Authority;
 import com.example.demo.exception.JwtAuthenticationEntryPoint;
 import com.example.demo.filter.JwtAuthenticationFilter;
+import com.example.demo.service.impl.UserServiceImpl;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,7 +29,7 @@ public class SecurityConfig {
     private JwtAuthenticationFilter jwtAuthenticationFilter;
     private UserDetailsService userDetailsService;
 
-    public SecurityConfig(JwtAuthenticationEntryPoint authenticationEntryPoint, JwtAuthenticationFilter jwtAuthenticationFilter, UserDetailsService userDetailsService) {
+    public SecurityConfig(JwtAuthenticationEntryPoint authenticationEntryPoint, JwtAuthenticationFilter jwtAuthenticationFilter, UserServiceImpl userDetailsService) {
         this.authenticationEntryPoint = authenticationEntryPoint;
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.userDetailsService = userDetailsService;
@@ -69,9 +70,9 @@ public class SecurityConfig {
                 .securityMatcher(AntPathRequestMatcher.antMatcher("/books/**"))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.POST,"/add")).hasAuthority(Authority.LIBRARIAN.toString())
-                        .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.PUT,"/edit")).hasAuthority(Authority.LIBRARIAN.toString())
-                        .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.DELETE,"/delete/**")).hasAuthority(Authority.LIBRARIAN.toString())
+                        .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.POST,"/books/add")).hasAuthority(Authority.LIBRARIAN.toString())
+                        .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.PUT,"/books/edit")).hasAuthority(Authority.LIBRARIAN.toString())
+                        .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.DELETE,"/books/delete/**")).hasAuthority(Authority.LIBRARIAN.toString())
                         .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET)).permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter, AuthorizationFilter.class);
@@ -84,9 +85,9 @@ public class SecurityConfig {
                 .securityMatcher(AntPathRequestMatcher.antMatcher("/borrow-detail/**"))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET,"/reader-action-details")).hasAuthority(Authority.LIBRARIAN.toString())
-                        .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.PUT,"/borrow")).hasAuthority(Authority.READER.toString())
-                        .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.PUT,"/return")).hasAuthority(Authority.READER.toString())
+                        .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET,"/borrow-detail/reader-action-details")).hasAuthority(Authority.LIBRARIAN.toString())
+                        .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.PUT,"/borrow-detail/borrow")).hasAuthority(Authority.READER.toString())
+                        .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.PUT,"/borrow-detail/return")).hasAuthority(Authority.READER.toString())
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter, AuthorizationFilter.class);
         return http.build();
@@ -98,7 +99,7 @@ public class SecurityConfig {
                 .securityMatcher(AntPathRequestMatcher.antMatcher("/user/**"))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET,"/switch-authority")).hasAuthority(Authority.LIBRARIAN.toString())
+                        .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET,"/user/switch-authority")).hasAuthority(Authority.LIBRARIAN.toString())
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter, AuthorizationFilter.class);
         return http.build();
