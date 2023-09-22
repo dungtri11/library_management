@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.stream.Collectors;
 
 @Component
 @Slf4j
@@ -44,11 +45,11 @@ public class JwtAuthenticationFilter implements Filter {
 
         UserDetails userDetails = userRepository.findByUsername(jwtUtils.getSubject(token))
                 .orElseThrow(() -> new BadRequestResponseException("Couldn't find suitable user"));
-
         Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+
         SecurityContext securityContext = SecurityContextHolder.getContext();
         securityContext.setAuthentication(authentication);
-
+        log.info("Authentication passed");
         filterChain.doFilter(request, response);
     }
 }
