@@ -72,6 +72,7 @@ public class SecurityConfig {
                         .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.POST,"/add")).hasAuthority(Authority.LIBRARIAN.toString())
                         .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.PUT,"/edit")).hasAuthority(Authority.LIBRARIAN.toString())
                         .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.DELETE,"/delete/**")).hasAuthority(Authority.LIBRARIAN.toString())
+                        .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET)).permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter, AuthorizationFilter.class);
         return http.build();

@@ -25,6 +25,7 @@ public class BookController {
     public ResponseEntity<?> findBookByCriteria_Short(
             @Parameter(description = "criteria for filtering") BookCriteria bookCriteria) {
         List<Book> books = bookService.findBookByCriteria(bookCriteria);
+        System.out.println(books.size());
         return ResponseEntity.ok(books);
     }
 
@@ -34,6 +35,7 @@ public class BookController {
     public ResponseEntity<?> findBookByCriteria(
             @Parameter(description = "criteria for filtering") BookCriteria bookCriteria) {
         List<Book> books = bookService.findBookByCriteria(bookCriteria);
+        System.out.println(books.size());
         return ResponseEntity.ok(books);
     }
 
